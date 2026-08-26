@@ -45,8 +45,6 @@ export default function WeatherBar() {
     };
 
     const loadWeather = () => {
-      // Exact location try karo.
-      // Permission nahi mili to Mirzapur fallback.
       if (!navigator.geolocation) {
         getWeather(
           MIRZAPUR.latitude,
@@ -73,7 +71,6 @@ export default function WeatherBar() {
           }
         },
         async () => {
-          // Permission denied / location unavailable
           await getWeather(
             MIRZAPUR.latitude,
             MIRZAPUR.longitude,
@@ -105,7 +102,7 @@ export default function WeatherBar() {
   };
 
   return (
-    <div className="hidden items-center gap-4 font-medium text-slate-600 sm:flex">
+    <div className="flex w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap text-[11px] font-semibold text-slate-600 sm:justify-end sm:gap-4 sm:text-xs">
       <span>
         {new Date().toLocaleDateString("en-IN", {
           day: "2-digit",
@@ -114,9 +111,11 @@ export default function WeatherBar() {
         })}
       </span>
 
-      <span className="text-slate-400">|</span>
+      <span className="text-slate-300">|</span>
 
-      <span>{weather.city}</span>
+      <span className="max-w-[90px] truncate">
+        {weather.city}
+      </span>
 
       <span className="text-slate-300">|</span>
 
