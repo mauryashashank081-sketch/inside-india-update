@@ -98,14 +98,12 @@ export default async function CategoryPage({
               />
 
               <div className="hidden sm:block">
+
                 <h1 className="whitespace-nowrap text-2xl font-black tracking-tight text-slate-900">
                   Inside India
                   <span className="text-blue-600"> Update</span>
                 </h1>
 
-                <p className="mt-0.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
-                  India's News • Updates • Stories
-                </p>
               </div>
 
               {/* MOBILE BRAND NAME */}
@@ -140,7 +138,6 @@ export default async function CategoryPage({
 
       {/* ================================================== */}
       {/* CATEGORY NAVIGATION */}
-      {/* MENU KE EXACT SAME VERTICAL START SE */}
       {/* ================================================== */}
 
       <nav className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
@@ -167,6 +164,7 @@ export default async function CategoryPage({
             {/* ================= CATEGORIES ================= */}
 
             {categories.map(([name, href]) => (
+
               <Link
                 key={href}
                 href={href}
@@ -178,6 +176,7 @@ export default async function CategoryPage({
               >
                 {name}
               </Link>
+
             ))}
 
             {/* ================= MORE ================= */}
@@ -247,10 +246,10 @@ export default async function CategoryPage({
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="group block min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl"
+                  className="group block min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl active:-translate-y-1 active:border-blue-200 active:shadow-lg"
                 >
 
-                  {/* IMAGE */}
+                  {/* ================= IMAGE ================= */}
 
                   {item.image ? (
 
@@ -276,9 +275,11 @@ export default async function CategoryPage({
 
                   )}
 
-                  {/* CONTENT */}
+                  {/* ================= CONTENT ================= */}
 
                   <div className="p-5">
+
+                    {/* CATEGORY */}
 
                     <div className="flex items-center gap-2">
 
@@ -290,13 +291,19 @@ export default async function CategoryPage({
 
                     </div>
 
+                    {/* TITLE */}
+
                     <h3 className="mt-2 line-clamp-3 break-words text-xl font-black leading-snug text-slate-950 transition duration-200 group-hover:text-blue-600">
                       {item.title}
                     </h3>
 
+                    {/* SUMMARY */}
+
                     <p className="mt-3 line-clamp-3 text-sm font-medium leading-6 text-slate-600">
                       {item.summary}
                     </p>
+
+                    {/* SOURCE + READ MORE */}
 
                     <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
 

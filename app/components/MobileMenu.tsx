@@ -53,29 +53,35 @@ export default function MobileMenu() {
           >
             {/* ================= HEADER ================= */}
 
-            <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-4">
-              <div className="flex min-w-0 items-center gap-3">
-                <img
-                  src="/logo.webp"
-                  alt="Inside India Update"
-                  className="h-10 w-10 shrink-0 rounded-full object-cover"
-                />
+<div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-5">
 
-                <h2 className="whitespace-nowrap text-lg font-black text-slate-900">
-                  Inside India
-                  <span className="text-blue-600"> Update</span>
-                </h2>
-              </div>
+  {/* LOGO + BRAND */}
 
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close menu"
-                className="ml-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-2xl text-slate-600 transition hover:bg-slate-50"
-              >
-                ×
-              </button>
-            </div>
+  <div className="flex min-w-0 flex-1 items-center gap-2.5">
+    <img
+      src="/logo.webp"
+      alt="Inside India Update"
+      className="h-9 w-9 shrink-0 rounded-full object-cover"
+    />
+
+    <h2 className="min-w-0 truncate text-base font-black text-slate-900">
+      Inside India
+      <span className="text-blue-600"> Update</span>
+    </h2>
+  </div>
+
+  {/* CLOSE BUTTON */}
+
+  <button
+    type="button"
+    onClick={() => setOpen(false)}
+    aria-label="Close menu"
+    className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-2xl leading-none text-slate-600 transition hover:bg-slate-50 hover:text-blue-600"
+  >
+    ×
+  </button>
+
+</div>
 
             {/* ================= SCROLLABLE CONTENT ================= */}
 
