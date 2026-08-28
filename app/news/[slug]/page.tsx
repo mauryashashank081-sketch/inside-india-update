@@ -22,9 +22,7 @@ export default async function ArticlePage({
   if (error || !article) {
     return (
       <main className="min-h-screen bg-white p-10 text-slate-900">
-        <h1 className="text-3xl font-black">
-          Article not found
-        </h1>
+        <h1 className="text-3xl font-black">Article not found</h1>
 
         <p className="mt-3 text-slate-600">
           This article could not be found.
@@ -40,48 +38,47 @@ export default async function ArticlePage({
     );
   }
 
+  const categoryPath =
+    "/category/" + (article.category?.toLowerCase() || "");
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
 
-      {/* HEADER */}
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5">
+       {/* HEADER */}
+<header className="border-b border-slate-200 bg-white">
+  <div className="relative mx-auto flex max-w-7xl items-center justify-center px-3 py-4 sm:px-6 sm:py-5">
 
-          <Link href="/" className="flex items-center gap-3">
+    {/* CENTER BRAND */}
+    <Link
+      href="/"
+      className="flex items-center gap-1.5 whitespace-nowrap sm:gap-3"
+    >
+      <img
+        src="/logo.webp"
+        alt="Inside India Update"
+        className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-slate-200 sm:h-11 sm:w-11"
+      />
 
-            <img
-              src="/logo.webp"
-              alt="Inside India Update"
-              className="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200"
-            />
+      <h1 className="text-[13px] font-black tracking-tight sm:text-2xl">
+        Inside India
+        <span className="text-blue-600"> Update</span>
+      </h1>
+    </Link>
 
-            <div>
-              <h1 className="text-xl font-black tracking-tight sm:text-2xl">
-                Inside India
-                <span className="text-blue-600"> Update</span>
-              </h1>
+    {/* HOME BUTTON */}
+    <Link
+      href="/"
+      className="absolute right-3 whitespace-nowrap rounded-lg border border-slate-200 px-2 py-1.5 text-[11px] font-bold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 sm:right-6 sm:px-4 sm:py-2 sm:text-sm"
+    >
+      Home
+    </Link>
 
-              <p className="hidden text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 sm:block">
-                India's News • Updates • Stories
-              </p>
-            </div>
-
-          </Link>
-
-          <Link
-            href="/"
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
-          >
-            ← Home
-          </Link>
-
-        </div>
-      </header>
+  </div>
+</header>
 
       {/* NAVIGATION */}
       <nav className="border-b border-slate-200 bg-white shadow-sm">
-
-        <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 py-2.5 whitespace-nowrap">
+        <div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto whitespace-nowrap px-4 py-2.5">
 
           <Link
             href="/"
@@ -151,23 +148,27 @@ export default async function ArticlePage({
 
       {/* ARTICLE */}
       <section className="bg-gradient-to-b from-slate-50 via-white to-white">
-
         <div className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
 
           {/* BREADCRUMB */}
           <div className="mb-6 text-sm font-semibold text-slate-400">
-            <Link href="/" className="hover:text-blue-600">
+
+            <Link
+              href="/"
+              className="hover:text-blue-600"
+            >
               Home
             </Link>
 
             <span className="mx-2">/</span>
 
             <Link
-              href={`/category/${article.category?.toLowerCase()}`}
+              href={categoryPath}
               className="hover:text-blue-600"
             >
               {article.category}
             </Link>
+
           </div>
 
           {/* MAIN ARTICLE BOX */}
@@ -266,7 +267,7 @@ export default async function ArticlePage({
           <div className="mt-8">
 
             <Link
-              href={`/category/${article.category?.toLowerCase()}`}
+              href={categoryPath}
               className="text-sm font-bold text-slate-500 transition hover:text-blue-600"
             >
               ← Back to {article.category} News
@@ -275,7 +276,6 @@ export default async function ArticlePage({
           </div>
 
         </div>
-
       </section>
 
       {/* FOOTER */}
@@ -283,26 +283,26 @@ export default async function ArticlePage({
 
         <div className="mx-auto max-w-7xl px-4 py-8">
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
 
             <img
               src="/logo.webp"
               alt="Inside India Update"
-              className="h-9 w-9 rounded-full object-cover"
+              className="h-9 w-9 shrink-0 rounded-full object-cover"
             />
 
-            <h2 className="text-xl font-black">
+            <h2 className="whitespace-nowrap text-xl font-black">
               Inside India
               <span className="text-blue-600"> Update</span>
             </h2>
 
           </div>
 
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-3 text-center text-sm text-slate-500">
             Independent news and updates from India and around the world.
           </p>
 
-          <div className="mt-6 border-t border-slate-200 pt-4 text-xs text-slate-400">
+          <div className="mt-6 border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
             © 2026 Inside India Update. All rights reserved.
           </div>
 
