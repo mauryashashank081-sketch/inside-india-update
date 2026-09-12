@@ -3,7 +3,7 @@ import NewsSearch from "./components/NewsSearch";
 import WeatherBar from "./components/WeatherBar";
 import MobileMenu from "./components/MobileMenu";
 import DesktopMoreMenu from "./components/DesktopMoreMenu";
-
+import MobileCategorySections from "./components/MobileCategorySections";
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
@@ -105,63 +105,70 @@ export default async function Home() {
 
       {/* ================= CATEGORY NAVIGATION ================= */}
 
-      <nav className="w-full border-b border-slate-200 bg-white">
+      <nav className="hidden w-full border-b border-slate-200 bg-white sm:block">
+  <div className="mx-auto w-full max-w-7xl">
+    <div
+      className="flex w-full items-center gap-1 overflow-x-auto overflow-y-hidden px-4 py-2.5 sm:px-6"
+      style={{
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
+    >
+      {/* HOME */}
+      <a
+        href="/"
+        className="shrink-0 rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+      >
+        Home
+      </a>
 
-        <div className="mx-auto w-full max-w-7xl">
+      {/* MAIN CATEGORIES */}
+      {[
+        ["India", "/category/india"],
+        ["World", "/category/world"],
+        ["Politics", "/category/politics"],
+        ["Business", "/category/business"],
+        ["Technology", "/category/technology"],
+        ["Sports", "/category/sports"],
+        ["Entertainment", "/category/entertainment"],
+        ["Education", "/category/education"],
+      ].map(([name, href]) => (
+        <a
+          key={href}
+          href={href}
+          className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-blue-600"
+        >
+          {name}
+        </a>
+      ))}
 
-          <div
-            className="flex w-full items-center gap-1 overflow-x-auto overflow-y-hidden px-4 py-2.5 sm:px-6"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-            }}
-          >
+      {/* MOBILE ONLY CATEGORIES */}
+      {[
+        ["Health", "/category/health"],
+        ["Science", "/category/science"],
+        ["Lifestyle", "/category/lifestyle"],
+        ["Crime", "/category/crime"],
+      ].map(([name, href]) => (
+        <a
+          key={href}
+          href={href}
+          className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-blue-600 sm:hidden"
+        >
+          {name}
+        </a>
+      ))}
 
-            {/* HOME */}
-
-            <a
-              href="/"
-              className="shrink-0 rounded-full bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
-            >
-              Home
-            </a>
-
-            {/* CATEGORIES */}
-
-            {[
-              ["India", "/category/india"],
-              ["World", "/category/world"],
-              ["Politics", "/category/politics"],
-              ["Business", "/category/business"],
-              ["Technology", "/category/technology"],
-              ["Sports", "/category/sports"],
-              ["Entertainment", "/category/entertainment"],
-              ["Education", "/category/education"],
-            ].map(([name, href]) => (
-              <a
-                key={href}
-                href={href}
-                className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-blue-600"
-              >
-                {name}
-              </a>
-            ))}
-
-            {/* MORE */}
-
-            <div className="shrink-0">
-              <DesktopMoreMenu />
-            </div>
-
-          </div>
-
-        </div>
-
-      </nav>
-
+      {/* DESKTOP ONLY MORE */}
+      <div className="hidden shrink-0 sm:block">
+        <DesktopMoreMenu />
+      </div>
+    </div>
+  </div>
+</nav>
+         <MobileCategorySections news={latestNews} />
       {/* ================= TOP STORIES ================= */}
 
-      <section className="w-full overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
+     <section className="hidden w-full overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white sm:block">
 
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 

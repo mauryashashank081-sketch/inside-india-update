@@ -53,35 +53,30 @@ export default function MobileMenu() {
           >
             {/* ================= HEADER ================= */}
 
-<div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-5">
+            <div className="flex shrink-0 items-center border-b border-slate-200 px-3 py-3 sm:px-5 sm:py-4">
+              {/* LOGO + BRAND */}
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                <img
+                  src="/logo.webp"
+                  alt="Inside India Update"
+                  className="h-9 w-9 shrink-0 rounded-full object-cover"
+                />
 
-  {/* LOGO + BRAND */}
+                <h2 className="min-w-0 whitespace-nowrap text-sm font-black text-slate-900 sm:text-base">
+                  Inside India <span className="text-blue-600">Update</span>
+                </h2>
+              </div>
 
-  <div className="flex min-w-0 flex-1 items-center gap-2.5">
-    <img
-      src="/logo.webp"
-      alt="Inside India Update"
-      className="h-9 w-9 shrink-0 rounded-full object-cover"
-    />
-
-    <h2 className="min-w-0 truncate text-base font-black text-slate-900">
-      Inside India
-      <span className="text-blue-600"> Update</span>
-    </h2>
-  </div>
-
-  {/* CLOSE BUTTON */}
-
-  <button
-    type="button"
-    onClick={() => setOpen(false)}
-    aria-label="Close menu"
-    className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-2xl leading-none text-slate-600 transition hover:bg-slate-50 hover:text-blue-600"
-  >
-    ×
-  </button>
-
-</div>
+              {/* CLOSE BUTTON */}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                className="ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-2xl leading-none text-slate-600 transition hover:bg-slate-50 hover:text-blue-600 sm:ml-4 sm:h-10 sm:w-10"
+              >
+                ×
+              </button>
+            </div>
 
             {/* ================= SCROLLABLE CONTENT ================= */}
 
