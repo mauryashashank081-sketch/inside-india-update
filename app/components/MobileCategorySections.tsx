@@ -9,6 +9,7 @@ type NewsItem = {
   category: string | null;
   image: string | null;
   slug: string;
+  created_at?: string | null;
 };
 
 type Props = {
@@ -33,9 +34,15 @@ const categories = [
 
 export default function MobileCategorySections({ news }: Props) {
   const [activeCategory, setActiveCategory] = useState("Home");
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
+    {}
+  );
+  const [currentPages, setCurrentPages] = useState<Record<string, number>>({});
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const lastActiveCategoryRef = useRef("Home");
+
   const scrollNavToCategory = (category: string) => {
     const nav = navRef.current;
     const activeButton = document.getElementById(
@@ -50,7 +57,10 @@ export default function MobileCategorySections({ news }: Props) {
       nav.clientWidth / 2;
 
     nav.scrollTo({
-      left: Math.max(0, Math.min(target, nav.scrollWidth - nav.clientWidth)),
+      left: Math.max(
+        0,
+        Math.min(target, nav.scrollWidth - nav.clientWidth)
+      ),
       behavior: "smooth",
     });
   };
@@ -64,7 +74,6 @@ export default function MobileCategorySections({ news }: Props) {
       `mobile-category-${category.toLowerCase()}`
     ) as HTMLElement | null;
 
-    // Change category horizontally only; do not vertically scroll the page.
     if (container && section) {
       container.scrollTo({
         left: section.offsetLeft,
@@ -107,7 +116,7 @@ export default function MobileCategorySections({ news }: Props) {
         scrollNavToCategory(closest);
       });
     }
-  };
+    };
 
   const getCategoryNews = (category: string) => {
     if (category === "Home") {
@@ -119,7 +128,36 @@ export default function MobileCategorySections({ news }: Props) {
         item.category?.toLowerCase() === category.toLowerCase()
     );
   };
+   const getTimeAgo = (createdAt: string | null | undefined) => {
+  if (!createdAt) return "Latest Update";
 
+  const created = new Date(createdAt).getTime();
+  const now = Date.now();
+
+  const diffInMinutes = Math.floor(
+    (now - created) / (1000 * 60)
+  );
+
+  if (diffInMinutes < 60) {
+    return `Published ${Math.max(1, diffInMinutes)} ${
+      diffInMinutes === 1 ? "minute" : "minutes"
+    } ago`;
+  }
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+
+  if (diffInHours < 24) {
+    return `Published ${diffInHours} ${
+      diffInHours === 1 ? "hour" : "hours"
+    } ago`;
+  }
+
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  return `Published ${diffInDays} ${
+    diffInDays === 1 ? "day" : "days"
+  } ago`;
+};
   const renderNewsCard = (item: NewsItem) => (
     <a
       key={item.id}
@@ -153,7 +191,7 @@ export default function MobileCategorySections({ news }: Props) {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-[11px] font-semibold text-slate-400">
-            Latest Update
+           {getTimeAgo(item.created_at)}
           </span>
 
           <span className="text-sm font-black text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-600">
@@ -197,7 +235,7 @@ export default function MobileCategorySections({ news }: Props) {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-[11px] font-semibold text-slate-400">
-            Latest Update
+             {getTimeAgo(item.created_at)}
           </span>
 
           <span className="text-sm font-black text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-600">
@@ -208,17 +246,192 @@ export default function MobileCategorySections({ news }: Props) {
     </a>
   );
 
+  const getVisibleCount = (category: string) =>
+    visibleCounts[category] ?? (category === "Home" ? 25 : 12);
+
+  const showMore = (category: string) => {
+    setVisibleCounts((current) => ({
+      ...current,
+      [category]:
+        getVisibleCount(category) + (category === "Home" ? 25 : 12),
+    }));
+  };
+
+  const viewMoreButton = (category: string, hasMore: boolean) =>
+    hasMore ? (
+      <button
+        type="button"
+        onClick={() => showMore(category)}
+        className="mx-auto mt-7 flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-1.5 text-base font-black text-white transition hover:bg-blue-700 active:scale-[0.99]"
+      >
+        View More
+        <span className="text-2xl font-normal leading-none">›</span>
+      </button>
+    ) : null;
+       const categoryItemsPerPage = 12;
+
+const getCurrentPage = (category: string) =>
+  currentPages[category] ?? 1;
+    const setCategoryPage = (category: string, page: number) => {
+  setCurrentPages((current) => ({
+    ...current,
+    [category]: page,
+  }));
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+ const categoryPagination = (category: string, totalItems: number) => {
+  const totalPages = Math.ceil(totalItems / categoryItemsPerPage);
+  const currentPage = getCurrentPage(category);
+
+  if (totalPages <= 1) return null;
+
+  let pages: (number | string)[] = [];
+
+  if (currentPage <= 3) {
+    pages = [1, 2, 3];
+
+    if (totalPages > 4) {
+      pages.push("...");
+    }
+
+    if (totalPages > 3) {
+      pages.push(totalPages);
+    }
+  } else if (currentPage >= totalPages - 2) {
+    pages = [1];
+
+    if (totalPages > 4) {
+      pages.push("...");
+    }
+
+    for (let i = Math.max(2, totalPages - 2); i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    pages = [
+      currentPage,
+      currentPage + 1,
+      currentPage + 2,
+      "...",
+      totalPages,
+    ];
+  }
+
   return (
-    <div className="sm:hidden">
+    <div className="mt-8 flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-2 py-1 shadow-sm">
+      {/* First + Previous */}
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          onClick={() => setCategoryPage(category, 1)}
+          disabled={currentPage === 1}
+          className="flex h-8 w-8 items-center justify-center text-slate-400 disabled:opacity-30"
+        >
+          |‹
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setCategoryPage(category, currentPage - 1)}
+          disabled={currentPage === 1}
+          className="flex h-8 w-8 items-center justify-center text-slate-400 disabled:opacity-30"
+        >
+          ‹
+        </button>
+      </div>
+
+      {/* Page numbers */}
+      <div className="flex min-w-0 items-center justify-center gap-1">
+        {pages.map((page, index) =>
+          page === "..." ? (
+            <span
+              key={`dots-${index}`}
+              className="flex h-8 w-7 items-center justify-center text-sm font-bold text-slate-400"
+            >
+              ...
+            </span>
+          ) : (
+            <button
+              key={page}
+              type="button"
+              onClick={() => setCategoryPage(category, page as number)}
+              className={`flex h-6 min-w-9 items-center justify-center rounded-lg px-1 text-sm font-bold ${
+                currentPage === page
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-500"
+              }`}
+            >
+              {page}
+            </button>
+          )
+        )}
+      </div>
+
+      {/* Next + Last */}
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          onClick={() => setCategoryPage(category, currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="flex h-8 w-8 items-center justify-center text-slate-400 disabled:opacity-30"
+        >
+          ›
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setCategoryPage(category, totalPages)}
+          disabled={currentPage === totalPages}
+          className="flex h-8 w-8 items-center justify-center text-slate-400 disabled:opacity-30"
+        >
+          ›|
+        </button>
+      </div>
+    </div>
+  );
+};
+  const mobileFooter = () => (
+    <footer className="border-t border-slate-200 bg-slate-50">
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <div className="flex items-center justify-center gap-3">
+          <img
+            src="/logo.webp"
+            alt="Inside India Update"
+            className="h-9 w-9 shrink-0 rounded-full object-cover"
+          />
+
+          <h2 className="whitespace-nowrap text-xl font-black">
+            Inside India
+            <span className="text-blue-600"> Update</span>
+          </h2>
+        </div>
+
+        <p className="mt-3 text-center text-sm text-slate-500">
+          Independent news and updates from India and around the world.
+        </p>
+
+        <div className="mt-6 border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
+          © 2026 Inside India Update. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+
+  return (
+    <div className="sm:hidden overflow-y-clip">
       {/* MOBILE CATEGORY STRIP */}
       <div className="relative z-40 border-b border-slate-200 bg-white shadow-sm">
         <div
           ref={navRef}
           className="flex w-full overflow-x-auto px-3 py-2"
           style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
+                  scrollbarWidth: "none",
+               msOverflowStyle: "none",
+               }}
         >
           {categories.map((category) => {
             const active = activeCategory === category;
@@ -246,11 +459,11 @@ export default function MobileCategorySections({ news }: Props) {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
+        className="flex w-full items-start flex-nowrap snap-x snap-mandatory overflow-x-auto overscroll-x-contain"
+      style={{
+         scrollbarWidth: "none",
+                msOverflowStyle: "none",
+           }}
       >
         {categories.map((category) => {
           const categoryNews = getCategoryNews(category);
@@ -260,7 +473,9 @@ export default function MobileCategorySections({ news }: Props) {
               key={category}
               id={`mobile-category-${category.toLowerCase()}`}
               data-category={category}
-              className="w-full shrink-0 snap-start"
+              className={`w-full shrink-0 snap-start ${
+           activeCategory === category ? "" : "h-0 overflow-hidden"
+               }`}
             >
               {category === "Home" ? (
                 <>
@@ -408,15 +623,26 @@ export default function MobileCategorySections({ news }: Props) {
                       </div>
 
                       <div className="grid min-w-0 gap-5">
-                        {categoryNews.slice(1).map(renderNewsCard)}
+                        {categoryNews
+                          .slice(1, 1 + getVisibleCount("Home"))
+                          .map(renderNewsCard)}
                       </div>
+
+                      {viewMoreButton(
+                        "Home",
+                        categoryNews.length - 1 >
+                          getVisibleCount("Home")
+                      )}
                     </div>
                   </section>
+
+                  {/* ================= HOME FOOTER ================= */}
+                  {mobileFooter()}
                 </>
               ) : (
                 /* ================= CATEGORY NEWS ================= */
                 <section className="w-full overflow-hidden bg-slate-50">
-                  <div className="mx-auto w-full max-w-7xl px-4 py-10">
+                  <div className="mx-auto flex w-full max-w-7xl flex-col px-4 py-10">
                     <div className="mb-8">
                       <div className="flex items-center gap-2">
                         <span className="h-2 w-2 shrink-0 rounded-full bg-blue-600" />
@@ -440,9 +666,19 @@ export default function MobileCategorySections({ news }: Props) {
                     </div>
 
                     {categoryNews.length > 0 ? (
-                      <div className="grid gap-5">
-                        {categoryNews.slice(0, 8).map(renderCategoryCard)}
-                      </div>
+                      <>
+                        <div className="grid gap-5">
+                         {categoryNews
+                     .slice(
+                          (getCurrentPage(category) - 1) * categoryItemsPerPage,
+                           getCurrentPage(category) * categoryItemsPerPage
+                            )
+                              .map(renderCategoryCard)}
+                         </div>
+                       {categoryPagination(category, categoryNews.length)}
+
+                        {mobileFooter()}
+                      </>
                     ) : (
                       <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center">
                         <p className="text-sm font-semibold text-slate-400">
