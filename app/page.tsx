@@ -29,6 +29,36 @@ export default async function Home() {
   }
 
   const latestNews = news ?? [];
+  const getTimeAgo = (createdAt: string | null | undefined) => {
+  if (!createdAt) return "Latest Update";
+
+  const created = new Date(createdAt).getTime();
+  const now = Date.now();
+
+  const diffInMinutes = Math.floor(
+    (now - created) / (1000 * 60)
+  );
+
+  if (diffInMinutes < 60) {
+    return `Published ${Math.max(1, diffInMinutes)} ${
+      diffInMinutes === 1 ? "minute" : "minutes"
+    } ago`;
+  }
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+
+  if (diffInHours < 24) {
+    return `Published ${diffInHours} ${
+      diffInHours === 1 ? "hour" : "hours"
+    } ago`;
+  }
+
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  return `Published ${diffInDays} ${
+    diffInDays === 1 ? "day" : "days"
+  } ago`;
+};
   const mainNews = latestNews[0];
 
   return (
@@ -353,7 +383,7 @@ export default async function Home() {
 
       {/* ================= LATEST STORIES ================= */}
 
-      <section className="w-full overflow-hidden bg-white">
+      <section className="hidden w-full overflow-hidden bg-white sm:block">
 
         <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-11">
 
@@ -434,7 +464,7 @@ export default async function Home() {
                   <div className="mt-4 flex items-center justify-between">
 
                     <span className="text-[11px] font-semibold text-slate-400">
-                      Latest Update
+                     {getTimeAgo(item.created_at)}
                     </span>
 
                     <span className="text-sm font-black text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-600">
@@ -457,7 +487,7 @@ export default async function Home() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer className="w-full overflow-hidden border-t border-slate-200 bg-slate-50">
+      <footer className="hidden w-full overflow-hidden border-t border-slate-200 bg-slate-50 sm:block">
 
         <div className="mx-auto w-full max-w-7xl px-4 py-9 sm:px-6">
 
