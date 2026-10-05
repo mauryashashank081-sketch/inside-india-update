@@ -111,7 +111,24 @@ export default function MobileCategorySections({ news }: Props) {
     if (closest !== lastActiveCategoryRef.current) {
       lastActiveCategoryRef.current = closest;
       setActiveCategory(closest);
+         const startY = window.scrollY;
+    const duration = 250;
+    const startTime = performance.now();
 
+     const smoothScrollToTop = (currentTime: number) => {
+     const elapsed = currentTime - startTime;
+     const progress = Math.min(elapsed / duration, 1);
+
+     const eased = 1 - Math.pow(1 - progress, 3);
+
+      window.scrollTo(0, startY * (1 - eased));
+
+         if (progress < 1) {
+         requestAnimationFrame(smoothScrollToTop);
+    }
+        };
+
+     requestAnimationFrame(smoothScrollToTop);
       requestAnimationFrame(() => {
         scrollNavToCategory(closest);
       });
